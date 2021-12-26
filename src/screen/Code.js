@@ -20,7 +20,7 @@ const Code = ({ navigation, route }) => {
         await firebase.auth().signInWithCredential(credential);
         firebase.auth().onAuthStateChanged(async (user) => {
             if (user != null) {
-                usersPost('',user.phoneNumber,user.uid).then(async(res)=>{
+                usersPost('Deneme User',user.phoneNumber,user.uid).then(async(res)=>{
                   if(res.success)
                     await SecureStore.setItemAsync('userToken',user.uid)
                   else

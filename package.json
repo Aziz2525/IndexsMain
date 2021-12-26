@@ -28,7 +28,9 @@
     "react-native-web": "~0.13.12",
     "react-native-webview": "^11.14.0",
     "socket.io-client": "^4.2.0",
-    "expo-av": "~9.2.3"
+    "expo-av": "~9.2.3",
+    "expo-image-picker": "~10.2.2",
+    "expo-contacts": "~9.2.5"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0"

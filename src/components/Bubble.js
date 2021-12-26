@@ -1,8 +1,9 @@
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Image } from "react-native-animatable";
-
+import config from "../../config";
 const Bubble = (props) => {
+  console.log(props.image)
   return (
     <TouchableOpacity {...props} style={styles.bubbleViewContainer} >
       <View style={styles.outBubble}>
@@ -10,9 +11,7 @@ const Bubble = (props) => {
           <View style={styles.imageView}>
             <Image
               style={styles.image}
-              source={{
-                uri: props.image,
-              }}
+              source={props.image === "default" ? require('../../assets/defaultimage.png'):{uri: config.server + props.image} }
             />
           </View>
           <View style={styles.contentMessage}>

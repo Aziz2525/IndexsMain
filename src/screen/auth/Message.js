@@ -15,36 +15,29 @@ import * as SecureStore from "expo-secure-store";
 import messageGet from "../../api/messageGet";
 
 const Message = ({ route }) => {
+  console.log(route.params)
   const scrollViewRef = useRef();
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
-  const [toMessageId, setToMessageId] = useState([]);
   const [me,setMe]=useState('')
   const sendMessageUserToken = route.params.userToken;
   socket.emit("get all list", sendMessageUserToken);
-
-  socket.on("get all list emit", (res) => {
-      setToMessageId(res[0]._id)
-  });
- 
   React.useEffect(()=>{
-   
       var bootstrap = async() =>{
+        var from = await SecureStore.getItemAsync('userToken');
         socket.on("get message",(res)=>{
-          setMessages((messages) => [...messages, { message:res.message,from:res.userToken }]);
+          setMessages((messages) => [...messages, { message:res.message,from:res.from,to:res.to }]);
         })
-          var from = await SecureStore.getItemAsync('userToken');
           setMe(from)
           messageGet(sendMessageUserToken,from).then((res)=>{
-              setMessages(res[0].messages)
+              setMessages(res[0]?res[0].messages:[])
           })
       }
       bootstrap()
-    
   },[])
   const send = async () => {
     var from = await SecureStore.getItemAsync('userToken');
-    socket.emit('send message',{message,toMessageId,from})
+    socket.emit('send message',{message,sendMessageUserToken,from})
     messagePost(sendMessageUserToken,from,message)
     setMessages((messages) => [...messages, { message, from: from }]);
     setMessage("");
@@ -62,7 +55,7 @@ const Message = ({ route }) => {
         }
       >
         {messages.map((data, index) => {
-          if (data.from === me)
+          if (me === data.from)
             return (
               <View style={styles.messagesRightView} key={index}>
                 <View></View>

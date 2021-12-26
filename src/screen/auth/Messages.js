@@ -14,17 +14,12 @@ const Messages =  ({navigation}) => {
         var bootstrap = async() =>{
             var from = await SecureStore.getItemAsync('userToken');
             setMe(from)
-            console.log(from)
             messagesGet(from).then((res)=>{
-                console.log(res)
                 setMessages(res)
             })
             socket.on('get message',async (res)=>{
                 setLastMessage(res.message)
-                const { sound } = await Audio.Sound.createAsync(
-                    require('../../../assets/getmessage1.wav')
-                 );
-                 await sound.playAsync();
+                 
                 Toast.show({
                     position:'top',
                     type: 'success',
@@ -45,7 +40,7 @@ const Messages =  ({navigation}) => {
             {
                 messages.map((data,index)=>{
                     return(
-                        <Bubble key={index} onPress={()=>navigation.push('Message',{userToken:data.to === me ? data.from:data.to,name:data.to,image:'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'})} navigation={navigation} image="https://img.freepik.com/free-photo/pleasant-looking-serious-man-stands-profile-has-confident-expression-wears-casual-white-t-shirt_273609-16959.jpg?size=626&ext=jpg" name={data.to === me ? data.from:data.to}  ago={"1 dk önce"} badge={1} text={lastMessage ? lastMessage: data.messages[data.messages.length-1].message}/>
+                        <Bubble key={index} onPress={()=>navigation.push('Message',{name:data.to === me ? data.fromUser[0].username:data.toUser[0].username,userToken:data.to === me ? data.from:data.to,image:data.to === me ? data.fromUser[0].userdetails ? data.fromUser[0].userdetails.profileImage:"default":data.toUser[0].userdetails?data.toUser[0].userdetails.profileImage:"default" })} navigation={navigation} image={data.to === me ? data.fromUser[0].userdetails ? data.fromUser[0].userdetails.profileImage:"default":data.toUser[0].userdetails?data.toUser[0].userdetails.profileImage:"default" } name={data.to === me ? data.fromUser[0].username:data.toUser[0].username}  ago={"1 dk önce"} badge={1} text={lastMessage ? lastMessage: data.messages[data.messages.length-1].message}/>
                     )
                 })
             }
